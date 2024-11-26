@@ -39,4 +39,5 @@ func main() {
 	} else {
 		fmt.Println("s1 y s2 son diferentes instancias.")
 	}
+
 }
