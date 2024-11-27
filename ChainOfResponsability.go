@@ -2,31 +2,26 @@ package main
 
 import "fmt"
 
-// Handler define la interfaz para procesar una solicitud o pasarla al siguiente manejador.
 type Handler interface {
 	SetNext(handler Handler) Handler
 	HandleRequest(request string)
 }
 
-// BaseHandler proporciona la estructura común para los manejadores.
 type BaseHandler struct {
 	next Handler
 }
 
-// SetNext configura el siguiente manejador en la cadena.
 func (b *BaseHandler) SetNext(handler Handler) Handler {
 	b.next = handler
 	return handler
 }
 
-// HandleNext pasa la solicitud al siguiente manejador si existe.
 func (b *BaseHandler) HandleNext(request string) {
 	if b.next != nil {
 		b.next.HandleRequest(request)
 	}
 }
 
-// BasicSupport maneja solicitudes básicas.
 type BasicSupport struct {
 	BaseHandler
 }
@@ -40,7 +35,6 @@ func (b *BasicSupport) HandleRequest(request string) {
 	}
 }
 
-// TechnicalSupport maneja solicitudes técnicas.
 type TechnicalSupport struct {
 	BaseHandler
 }
@@ -63,17 +57,13 @@ func (s *Supervisor) HandleRequest(request string) {
 	fmt.Println("Supervisor: Evaluando y resolviendo la solicitud crítica.")
 }
 
-// main configura la cadena y envía solicitudes.
 func main() {
-	// Crear los manejadores
 	basic := &BasicSupport{}
 	technical := &TechnicalSupport{}
 	supervisor := &Supervisor{}
 
-	// Configurar la cadena: Basic -> Technical -> Supervisor
 	basic.SetNext(technical).SetNext(supervisor)
 
-	// Enviar solicitudes a la cadena
 	fmt.Println("Solicitud 1: pregunta básica")
 	basic.HandleRequest("pregunta básica")
 
